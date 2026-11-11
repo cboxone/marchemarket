@@ -1,0 +1,65 @@
+name: Tests
+
+on:
+  push:
+    branches: ['**']
+  pull_request:
+    branches: ['**']
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        php-version: ['8.2', '8.3']
+
+    steps:
+      - name: Récupérer le code
+        uses: actions/checkout@v4
+
+      - name: Installer PHP ${{ matrix.php-version }}
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php-version }}
+          extensions: mbstring, dom, fileinfo, mysql, pdo_sqlite, gd, zip
+          coverage: none
+
+      - name: Installer Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Copier le fichier d'environnement de test
+        run: cp .env.example .env
+
+      - name: Mettre en cache les dépendances Composer
+        uses: actions/cache@v4
+        with:
+          path: vendor
+          key: composer-${{ matrix.php-version }}-${{ hashFiles('composer.lock') }}
+          restore-keys: composer-${{ matrix.php-version }}-
+
+      - name: Installer les dépendances Composer
+        run: composer install --no-interaction --prefer-dist --no-progress
+
+      - name: Générer la clé d'application
+        run: php artisan key:generate
+
+      - name: Installer les dépendances npm et compiler les assets
+        run: |
+          npm ci
+          npm run build
+
+      - name: Vérifier le style de code (Laravel Pint)
+        # Informatif, non bloquant : le code de ce projet a été écrit sans
+        # accès à un environnement PHP local pour faire tourner Pint et
+        # corriger d'éventuels écarts de style avant la première exécution
+        # de cette CI. À rendre bloquant (retirer continue-on-error) une
+        # fois une première passe `vendor/bin/pint` faite et commitée.
+        run: vendor/bin/pint --test
+        continue-on-error: true
+
+      - name: Lancer la suite de tests
+        run: php artisan test --colors=always

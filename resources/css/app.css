@@ -1,0 +1,92 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+    body {
+        @apply bg-paper text-ink antialiased;
+    }
+    h1, h2, h3, h4 {
+        @apply font-display;
+    }
+}
+
+@layer components {
+    .btn-primary {
+        @apply inline-flex items-center justify-center gap-2 rounded-md bg-amber-500 px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-amber-600 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-amber-600 disabled:cursor-not-allowed disabled:opacity-50;
+    }
+    .btn-secondary {
+        @apply inline-flex items-center justify-center gap-2 rounded-md border border-line bg-white px-5 py-2.5 text-sm font-semibold text-ink transition hover:border-navy-500 hover:text-navy-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-navy-500;
+    }
+    .btn-dark {
+        @apply inline-flex items-center justify-center gap-2 rounded-md bg-navy-800 px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-navy-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-navy-800;
+    }
+    .field-label {
+        @apply mb-1 block text-sm font-medium text-ink;
+    }
+    .field-input {
+        @apply w-full rounded-md border border-line bg-white px-3 py-2 text-sm text-ink placeholder:text-navy-300 focus:border-navy-500 focus:outline-none focus:ring-1 focus:ring-navy-500;
+    }
+    .card {
+        @apply rounded-lg border border-line bg-white shadow-card;
+    }
+    .badge-trade {
+        @apply inline-flex items-center gap-1 rounded-full bg-trade-greenLight px-2.5 py-1 text-xs font-medium text-trade-green;
+    }
+}
+
+/**
+ * Mode sombre (classe `.dark` posée sur <html> par le bouton de la barre
+ * de navigation, voir resources/views/layouts/app.blade.php).
+ *
+ * Plutôt que de dupliquer un jeu de classes `dark:` sur chaque vue, on
+ * surcharge directement les classes utilitaires que tout le site réutilise
+ * déjà comme jetons de design (bg-white pour les cartes, text-ink pour le
+ * texte principal, border-line pour les bordures, bg-navy-50 pour les
+ * fonds discrets/en-têtes de tableau, etc.). Comme ces classes sont déjà
+ * présentes partout, cette seule feuille de style suffit à adapter
+ * l'ensemble du site sans retoucher chaque fichier Blade.
+ */
+.dark {
+    color-scheme: dark;
+}
+.dark body {
+    @apply bg-navy-900 text-navy-50;
+}
+.dark .bg-paper {
+    @apply bg-navy-900;
+}
+.dark .bg-white {
+    @apply bg-navy-800;
+}
+.dark .bg-navy-50 {
+    @apply bg-navy-700;
+}
+.dark .text-ink {
+    @apply text-navy-50;
+}
+.dark .text-navy-500 {
+    color: #8b9ab6;
+}
+.dark .text-navy-300 {
+    color: #8b9ab6;
+}
+.dark .border-line {
+    @apply border-navy-700;
+}
+.dark .field-input {
+    @apply bg-navy-800 text-navy-50;
+}
+.dark .field-input::placeholder {
+    color: #8b9ab6;
+}
+.dark .shadow-card {
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.3), 0 1px 3px rgba(0, 0, 0, 0.4);
+}
+.dark .badge-trade {
+    background-color: rgba(31, 138, 95, 0.15);
+}
+.dark img {
+    filter: brightness(0.92);
+}
+
